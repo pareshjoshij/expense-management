@@ -1,33 +1,23 @@
-// This is the main entry point for our backend application.
-
 const express = require('express');
 const dotenv = require('dotenv');
-const cors = require('cors');
 const connectDB = require('./config/db');
+const cors = require('cors'); // Import cors
 
-// Load environment variables from .env file
 dotenv.config();
-
-// Connect to the database
 connectDB();
 
 const app = express();
 
-// Middleware
-app.use(cors()); // Enable Cross-Origin Resource Sharing
-app.use(express.json()); // Allow the server to accept JSON in the request body
+// Enable CORS for all routes
+app.use(cors());
 
-// --- API Routes ---
-// Any request to /api/auth will be handled by our authRoutes file.
+app.use(express.json());
+
+// --- Define Routes ---
 app.use('/api/auth', require('./routes/authRoutes'));
+app.use('/api/expenses', require('./routes/expenseRoutes')); // Add this line for expenses
 
-
-// Define a simple root route for testing
-app.get('/', (req, res) => {
-  res.send('Expense Management API is running...');
-});
-
-
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+

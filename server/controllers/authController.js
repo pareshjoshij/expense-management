@@ -65,7 +65,6 @@ exports.loginUser = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    // Correctly find the user AND select the password field
     const user = await User.findOne({ email }).select('+password');
 
     if (!user) {
@@ -98,6 +97,7 @@ exports.loginUser = async (req, res) => {
             name: user.name,
             email: user.email,
             role: user.role,
+            companyId: user.companyId, // This is the line that was added
           },
         });
       }

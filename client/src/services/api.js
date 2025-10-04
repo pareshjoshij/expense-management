@@ -1,7 +1,6 @@
 import axios from 'axios';
 
-// The base URL is now relative. The Vite proxy will handle sending it
-// to the correct backend server (http://localhost:5001).
+// The Vite proxy will handle forwarding this to the correct backend server.
 const apiClient = axios.create({
   baseURL: '/api',
   headers: {
@@ -25,11 +24,7 @@ export const registerUser = async (userData) => {
 };
 
 /**
- * Logs in a user and returns the response data.
- * @param {object} credentials - The user's login credentials.
- * @param {string} credentials.email - The user's email.
- * @param {string} credentials.password - The user's password.
- * @returns {Promise<object>} The server response.
+ * Logs in a user.
  */
 export const loginUser = async (credentials) => {
   try {
@@ -38,6 +33,26 @@ export const loginUser = async (credentials) => {
   } catch (error) {
     if (error.response && error.response.data) {
       throw new Error(error.response.data.message || 'Login failed');
+    }
+    throw new Error('Network error or server is not responding.');
+  }
+};
+
+/**
+ * Submits a new expense claim.
+ * @param {object} expenseData - The details of the expense.
+ * @returns {Promise<object>} The server response.
+ */
+export const submitExpense = async (expenseData) => {
+  try {
+    // In a real app, we would also send the auth token here
+    // const token = localStorage.getItem('token');
+    // const config = { headers: { 'Authorization': `Bearer ${token}` } };
+    const response = await apiClient.post('/expenses', expenseData);
+    return response.data;
+  } catch (error) {
+    if (error.response && error.response.data) {
+      throw new Error(error.response.data.message || 'Expense submission failed');
     }
     throw new Error('Network error or server is not responding.');
   }
